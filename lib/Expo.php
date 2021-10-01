@@ -78,6 +78,14 @@ class Expo
     {
         return $this->registrar->removeInterest($interest, $token);
     }
+
+    /**
+     *  Get Subscription from given interest array
+     * 
+     */
+    public function getAllSubscription(array $interest){
+        return $this->registrar->getInterests($interest);
+    }
     
     /**
      * @param string|null $accessToken

@@ -192,6 +192,23 @@ class Expo
     }
 
     /**
+     * Handle with unexpected response error
+     *
+     * @throws UnexpectedResponseException
+     *
+     * @return null|resource
+     */
+    private function handleWithUnexpectedResponse($response) {
+        if (is_array($response) && isset($response['body'])) {
+            $errors = json_decode($response['body'])->errors ?? [];
+
+            return $errors[0]->message ?? null;
+        }
+
+        return null;
+    }
+
+    /**
      * Get the cURL resource
      *
      * @throws ExpoException
@@ -230,7 +247,9 @@ class Expo
         $responseData = json_decode($response['body'], true)['data'] ?? null;
 
         if (! is_array($responseData)) {
-            throw new UnexpectedResponseException();
+            throw new UnexpectedResponseException(
+                $this->handleWithUnexpectedResponse($response)
+            );
         }
 
         return $responseData;
